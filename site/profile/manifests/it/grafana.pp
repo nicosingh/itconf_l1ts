@@ -139,6 +139,7 @@ class profile::it::grafana {
 		cwd => "/etc/grafana/lsst/",
 		command => "python3.6 gpInputs.py",
 		require => Exec["Run gpSetup.py"],
+		notify => File["/etc/grafana/lsst/restart.txt"]
 	}
 
 	exec{ "Run gpAccounts.py":
@@ -167,8 +168,13 @@ class profile::it::grafana {
 
 	file{ "/etc/grafana/lsst/restart.txt" :
 		ensure => "absent",
-		notify => Service["grafana-server"],
-		before => Exec["Run gpInputs.py"]
+		notify => Exec["On Demand grafana-server restart"],
+	}
+
+	exec{ "On Demand grafana-server restart":
+		path  => [ '/usr/bin', '/bin', '/usr/sbin' ], 
+		command => "systemctl restart grafana-server",
+		refreshonly => true,
 	}
 
 }
