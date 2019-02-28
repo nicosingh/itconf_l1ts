@@ -162,11 +162,13 @@ class profile::it::grafana {
 		before => Exec["Run gpInputs.py"]
 	}
 
-	file{ "/var/lib/grafana/plugins":
-		ensure => directory,
-		owner => grafana,
-		group => grafana,
-		mode => "750",
+	if ! defined( File["/var/lib/grafana/plugins"] ){
+		file{ "/var/lib/grafana/plugins":
+			ensure => directory,
+			owner => grafana,
+			group => grafana,
+			mode => "750",
+		}
 	}
 
 	file{ "/etc/grafana/lsst/restart.txt" :
