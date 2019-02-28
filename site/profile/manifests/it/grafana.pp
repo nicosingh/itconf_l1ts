@@ -123,8 +123,8 @@ class profile::it::grafana {
 		path  => [ '/usr/bin', '/bin', '/usr/sbin' ], 
 		cwd => "/etc/grafana/lsst/",
 		command => "python3.6 gpSetup.py",
-		require => [Package["python36-requests"], Exec["Installing PyYAML"], File["/etc/grafana/lsst/"]],
-		before => [Firewalld_port["Grafana Main Port"], Service["grafana-server"]]
+		require => [Package["python36-requests"], Exec["Installing PyYAML"], File["/etc/grafana/lsst/"], Class["grafana"]],
+		before => [Firewalld_port["Grafana Main Port"]]
 	}
 
 	firewalld_port { 'Grafana Main Port':
@@ -139,12 +139,6 @@ class profile::it::grafana {
 		cwd => "/etc/grafana/lsst/",
 		command => "python3.6 gpInputs.py",
 		require => Exec["Run gpSetup.py"],
-	}
-
-	exec{ "Restart grafana on demand":
-		path  => [ '/usr/bin', '/bin', '/usr/sbin' ], 
-		refreshonly => true,
-		command => "systemctl restart grafana-server",
 	}
 
 	exec{ "Run gpAccounts.py":
@@ -174,7 +168,7 @@ class profile::it::grafana {
 	file{ "/etc/grafana/lsst/restart.txt" :
 		ensure => "absent",
 		notify => Service["grafana-server"],
-		require => Exec["Run gpInputs.py"]
+		before => Exec["Run gpInputs.py"]
 	}
 
 }
