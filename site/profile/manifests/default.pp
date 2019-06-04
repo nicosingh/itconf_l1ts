@@ -5,6 +5,7 @@ class profile::default {
   include profile::it::monitoring
   include profile::it::lsst_users
   include profile::it::ims
+  include service-docker
   # All telegraf configuration came from Hiera
 
   package { 'nmap':
