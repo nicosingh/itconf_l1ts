@@ -32,5 +32,6 @@ mod 'efd',
 	:git => 'https://github.com/LSST-IT/puppet-efd.git'
 mod 'headerservice',
 	:git => 'https://github.com/LSST-IT/puppet-headerservice.git'
+mod 'puppetlabs/docker'
 mod 'service-docker',
 	:git => 'https://github.com/nicosingh/puppet-docker.git'
